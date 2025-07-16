@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodrop - Timer Pomodoro Líquido</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="icon" href="assets/images/icons/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body> 
+    <div class="container">
+        <!-- Partículas de Fundo -->
+        <div class="background-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>🍅 Pomodrop</h1>
+                <span class="logo-subtitle">Timer Líquido</span>
+            </div>
+            <div class="header-controls">
+                <button class="btn-icon" id="musicToggle" title="Controle de Música">
+                    <span class="icon">🎵</span>
+                    <span class="icon-label">Música</span>
+                </button>
+                <button class="btn-icon" id="fullscreenBtn" title="Tela Cheia">
+                    <span class="icon">⛶</span>
+                    <span class="icon-label">Tela Cheia</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Timer Section -->
+        <main class="main-content">
+            <div class="timer-container">
+                <!-- Relógio Líquido Principal -->
+                <div class="liquid-timer" id="timerDisplay">
+                    <!-- Efeitos Líquidos de Fundo -->
+                    <div class="liquid-background">
+                        <div class="liquid-wave wave1"></div>
+                        <div class="liquid-wave wave2"></div>
+                        <div class="liquid-wave wave3"></div>
+                        <div class="liquid-wave wave4"></div>
+                    </div>
+                    
+                    <!-- Círculo Principal -->
+                    <div class="timer-circle">
+                        <svg class="progress-ring" viewBox="0 0 400 400">
+                            <defs>
+                                <linearGradient id="liquidGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#9333ea;stop-opacity:0.9" />
+                                    <stop offset="25%" style="stop-color:#3b82f6;stop-opacity:0.8" />
+                                    <stop offset="50%" style="stop-color:#06b6d4;stop-opacity:0.7" />
+                                    <stop offset="75%" style="stop-color:#ec4899;stop-opacity:0.8" />
+                                    <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0.9" />
+                                </linearGradient>
+                                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+                                    <feMerge> 
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            
+                            <!-- Círculo de Fundo -->
+                            <circle cx="200" cy="200" r="180" 
+                                    fill="none" 
+                                    stroke="rgba(147, 51, 234, 0.1)" 
+                                    stroke-width="12"
+                                    stroke-linecap="round"/>
+                            
+                            <!-- Barra de Progresso Líquida -->
+                            <circle cx="200" cy="200" r="180" 
+                                    fill="none" 
+                                    stroke="url(#liquidGradient)" 
+                                    stroke-width="12" 
+                                    stroke-linecap="round"
+                                    stroke-dasharray="1130.97"
+                                    stroke-dashoffset="1130.97"
+                                    transform="rotate(-90 200 200)"
+                                    filter="url(#glow)"
+                                    class="progress-bar"
+                                    id="progressBar"/>
+                        </svg>
+                        
+                        <!-- Display Central do Tempo -->
+                        <div class="time-display">
+                            <div class="time-wrapper">
+                                <span class="time-text" id="timeText">25:00</span>
+                            </div>
+                            <div class="status-wrapper">
+                                <span class="status-text" id="timerStatus">Trabalho</span>
+                                <div class="status-indicator">
+                                    <div class="indicator-dot"></div>
+                                    <div class="indicator-pulse"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Partículas Flutuantes -->
+                    <div class="floating-particles">
+                        <div class="float-particle"></div>
+                        <div class="float-particle"></div>
+                        <div class="float-particle"></div>
+                        <div class="float-particle"></div>
+                        <div class="float-particle"></div>
+                        <div class="float-particle"></div>
+                    </div>
+                </div>
+
+                <!-- Informações da Sessão -->
+                <div class="session-info">
+                    <div class="session-counter">
+                        <span class="session-label">Sessão</span>
+                        <span class="session-number" id="sessionNumber">1</span>
+                    </div>
+                    <div class="next-session">
+                        <span class="next-label">Próximo:</span>
+                        <span class="next-text" id="nextSession">Pausa</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Controles do Timer -->
+            <div class="timer-controls">
+                <button class="btn-control play-btn" id="playBtn" title="Iniciar">
+                    <div class="btn-background"></div>
+                    <span class="btn-icon">▶</span>
+                    <span class="btn-label">Iniciar</span>
+                </button>
+                <button class="btn-control pause-btn" id="pauseBtn" title="Pausar">
+                    <div class="btn-background"></div>
+                    <span class="btn-icon">⏸</span>
+                    <span class="btn-label">Pausar</span>
+                </button>
+                <button class="btn-control reset-btn" id="resetBtn" title="Resetar">
+                    <div class="btn-background"></div>
+                    <span class="btn-icon">⏹</span>
+                    <span class="btn-label">Resetar</span>
+                </button>
+                <button class="btn-control settings-btn" id="settingsBtn" title="Configurações">
+                    <div class="btn-background"></div>
+                    <span class="btn-icon">⚙</span>
+                    <span class="btn-label">Configurar</span>
+                </button>
+            </div>
+        </main>
+
+        <!-- Music Panel -->
+        <section class="music-panel glassmorphism hidden" id="musicPanel">
+            <div class="panel-header">
+                <h3>🎵 Controle de Áudio</h3>
+                <button class="panel-close" id="musicPanelClose">×</button>
+            </div>
+            
+            <!-- YouTube Link Input -->
+            <div class="youtube-section">
+                <h4>🎬 Link do YouTube</h4>
+                <div class="youtube-input-group">
+                    <input type="url" 
+                           id="youtubeLink" 
+                           placeholder="Cole o link do YouTube aqui..."
+                           class="youtube-input"/>
+                    <button class="youtube-add-btn" id="addYoutubeBtn">
+                        <span class="btn-icon">+</span>
+                    </button>
+                </div>
+                <div class="youtube-status" id="youtubeStatus">
+                    <span class="status-icon">🎵</span>
+                    <span class="status-text">Nenhum vídeo carregado</span>
+                </div>
+            </div>
+            
+            <div class="section-divider"></div>
+            
+            <!-- Opções de Música -->
+            <div class="music-options">
+                <button class="music-btn active" data-type="none">
+                    <div class="music-icon-wrapper">
+                        <span class="music-icon">🔇</span>
+                    </div>
+                    <div class="music-info">
+                        <span class="music-label">Sem Áudio</span>
+                        <span class="music-description">Modo silencioso</span>
+                    </div>
+                </button>
+                
+                <button class="music-btn" data-type="youtube">
+                    <div class="music-icon-wrapper">
+                        <span class="music-icon">🎬</span>
+                    </div>
+                    <div class="music-info">
+                        <span class="music-label">YouTube</span>
+                        <span class="music-description">Seu link personalizado</span>
+                    </div>
+                </button>
+                
+                <button class="music-btn" data-type="lofi">
+                    <div class="music-icon-wrapper">
+                        <span class="music-icon">🎧</span>
+                    </div>
+                    <div class="music-info">
+                        <span class="music-label">Lofi Beats</span>
+                        <span class="music-description">Relaxante e focado</span>
+                    </div>
+                </button>
+                
+                <button class="music-btn" data-type="nature">
+                    <div class="music-icon-wrapper">
+                        <span class="music-icon">🌿</span>
+                    </div>
+                    <div class="music-info">
+                        <span class="music-label">Natureza</span>
+                        <span class="music-description">Sons ambientes</span>
+                    </div>
+                </button>
+                
+                <button class="music-btn" data-type="synthwave">
+                    <div class="music-icon-wrapper">
+                        <span class="music-icon">🌊</span>
+                    </div>
+                    <div class="music-info">
+                        <span class="music-label">Synthwave</span>
+                        <span class="music-description">Energia retrô</span>
+                    </div>
+                </button>
+                
+                <button class="music-btn" data-type="upload">
+                    <div class="music-icon-wrapper">
+                        <span class="music-icon">📁</span>
+                    </div>
+                    <div class="music-info">
+                        <span class="music-label">Upload MP3</span>
+                        <span class="music-description">Arquivo local</span>
+                    </div>
+                </button>
+            </div>
+            
+            <!-- Controles de Música -->
+            <div class="music-controls-section">
+                <div class="music-player">
+                    <button class="music-control-btn" id="musicPrevBtn">⏮</button>
+                    <button class="music-control-btn primary" id="musicPlayBtn">▶</button>
+                    <button class="music-control-btn" id="musicPauseBtn">⏸</button>
+                    <button class="music-control-btn" id="musicNextBtn">⏭</button>
+                </div>
+                
+                <div class="current-music" id="currentMusic">
+                    <div class="music-title">Nenhuma música</div>
+                    <div class="music-artist">Silencioso</div>
+                </div>
+            </div>
+            
+            <!-- Controle de Volume -->
+            <div class="volume-section">
+                <div class="volume-header">
+                    <span class="volume-label">Volume</span>
+                    <span class="volume-value" id="volumeValue">30%</span>
+                </div>
+                <div class="volume-control">
+                    <button class="volume-btn" id="volumeMuteBtn">🔊</button>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="30" class="volume-slider">
+                </div>
+            </div>
+            
+            <input type="file" id="audioUpload" accept="audio/*" style="display: none;">
+        </section>
+
+        <!-- Settings Panel -->
+        <section class="settings-panel glassmorphism hidden" id="settingsPanel">
+            <div class="panel-header">
+                <h3>⚙️ Configurações</h3>
+                <button class="panel-close" id="settingsPanelClose">×</button>
+            </div>
+            
+            <div class="settings-grid">
+                <div class="setting-group">
+                    <label for="workTime">Tempo de Trabalho</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="workTime" min="1" max="60" value="25">
+                        <span class="input-unit">min</span>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="breakTime">Tempo de Pausa</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="breakTime" min="1" max="30" value="5">
+                        <span class="input-unit">min</span>
+                    </div>
+                </div>
+                
+                <div class="setting-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="infiniteMode">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Modo Infinito</span>
+                    </label>
+                </div>
+                
+                <div class="setting-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="pauseMusicWithTimer" checked>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Pausar música com timer</span>
+                    </label>
+                </div>
+                
+                <div class="background-selector">
+                    <h4>Tema de Fundo</h4>
+                    <div class="bg-options">
+                        <button class="bg-btn active" data-bg="default">
+                            <div class="bg-preview bg-default"></div>
+                            <span class="bg-name">Padrão</span>
+                        </button>
+                        <button class="bg-btn" data-bg="neon-city">
+                            <div class="bg-preview bg-neon-city"></div>
+                            <span class="bg-name">Neon City</span>
+                        </button>
+                        <button class="bg-btn" data-bg="cyber-grid">
+                            <div class="bg-preview bg-cyber-grid"></div>
+                            <span class="bg-name">Cyber Grid</span>
+                        </button>
+                        <button class="bg-btn" data-bg="space-retro">
+                            <div class="bg-preview bg-space-retro"></div>
+                            <span class="bg-name">Space Retro</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Music Status Display -->
+        <div class="music-status glassmorphism" id="musicStatus">
+            <div class="music-visual">
+                <div class="audio-bars">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            <div class="music-info">
+                <div class="music-title" id="currentMusicTitle">Sem música</div>
+                <div class="music-source" id="musicSource">Modo silencioso</div>
+            </div>
+        </div>
+
+        <!-- Notification -->
+        <div class="notification glassmorphism hidden" id="notification">
+            <div class="notification-icon">
+                <span class="notif-emoji">🎉</span>
+            </div>
+            <div class="notification-content">
+                <div class="notification-title">Sessão Concluída!</div>
+                <div class="notification-message">Hora da pausa</div>
+            </div>
+            <button class="notification-close" id="notificationClose">×</button>
+        </div>
+
+        <!-- Audio Elements -->
+        <div id="youtubePlayer" style="display: none;"></div>
+        <audio id="audioPlayer" loop preload="metadata"></audio>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
