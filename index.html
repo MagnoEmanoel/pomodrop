@@ -42,6 +42,12 @@
             </div>
         </header>
 
+        <!-- Exit Fullscreen Button (Only visible in fullscreen) -->
+        <button class="exit-fullscreen-btn hidden" id="exitFullscreenBtn">
+            <span class="exit-icon">✕</span>
+            <span class="exit-label">Sair da Tela Cheia</span>
+        </button>
+
         <!-- Main Timer Section -->
         <main class="main-content">
             <div class="timer-container">
@@ -99,7 +105,7 @@
                         <!-- Display Central do Tempo -->
                         <div class="time-display">
                             <div class="time-wrapper">
-                                <span class="time-text" id="timeText">25:00</span>
+                                <span class="time-text" id="timeText">25:00:00</span>
                             </div>
                             <div class="status-wrapper">
                                 <span class="status-text" id="timerStatus">Trabalho</span>
@@ -289,6 +295,19 @@
             
             <div class="settings-grid">
                 <div class="setting-group">
+                    <label for="activityType">Tipo de Atividade</label>
+                    <select id="activityType" class="activity-select">
+                        <option value="Trabalho">Trabalho</option>
+                        <option value="Estudo">Estudo</option>
+                        <option value="Exercício">Exercício</option>
+                        <option value="Leitura">Leitura</option>
+                        <option value="Projeto">Projeto</option>
+                        <option value="Foco">Foco</option>
+                        <option value="Tarefa">Tarefa</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
                     <label for="workTime">Tempo de Trabalho</label>
                     <div class="input-wrapper">
                         <input type="number" id="workTime" min="1" max="60" value="25">
@@ -303,12 +322,12 @@
                         <span class="input-unit">min</span>
                     </div>
                 </div>
-                
+
                 <div class="setting-group checkbox-group">
                     <label class="checkbox-label">
                         <input type="checkbox" id="infiniteMode">
                         <span class="checkmark"></span>
-                        <span class="checkbox-text">Modo Infinito</span>
+                        <span class="checkbox-text">Modo Infinito (Cronômetro Crescente)</span>
                     </label>
                 </div>
                 
