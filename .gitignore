@@ -1,28 +1,22 @@
-# Arquivos temporários do sistema
 .DS_Store
 Thumbs.db
 
-# Configurações locais ou sensíveis
 *.env
 config.json
 secrets.json
 
-# Cache ou dados salvos localmente
 localStorage/
 *.cache
 *.log
 
-# Configurações de IDE/Editores
 .vscode/
 .idea/
 *.sublime-workspace
 *.sublime-project
 
-# Pastas de build ou dependências (se aplicável)
 node_modules/
 dist/
 build/
 
-# Arquivos de teste ou deploy local
 test/
 deploy/
