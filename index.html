@@ -3,401 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodrop - Timer Pomodoro Líquido</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="icon" href="assets/images/icons/favicon.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body> 
-    <div class="container">
-        <!-- Partículas de Fundo -->
-        <div class="background-particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-        </div>
+    <title>Timer Pomodoro - Minimalista</title>
+    <meta name="description" content="Timer Pomodoro minimalista com temas, música ambiente e controles avançados">
+    <meta name="author" content="Pomodoro Timer">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/images/icons/favicon.ico">
+    
+    <!-- Meta tags para PWA -->
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+.volume-slider-youtube,
+.volume-slider-youtube::-webkit-slider-track,
+.volume-slider-youtube::-webkit-slider-thumb,
+.volume-slider-youtube::-moz-range-track,
+.volume-slider-youtube::-moz-range-thumb {
+    background: #3b82f6 !important;
+    accent-color: #3b82f6 !important;
+}
 
+.volume-percentage {
+    color: #3b82f6 !important;
+}
+
+input[type="range"].volume-slider-youtube {
+    background: #3b82f6 !important;
+    accent-color: #3b82f6 !important;
+}
+</style>
+
+</head>
+<body class="theme-default">
+    <div class="container">
         <!-- Header -->
         <header class="header">
             <div class="logo">
-                <h1>🍅 Pomodrop</h1>
-                <span class="logo-subtitle">Timer Líquido</span>
+                <h1>Pomodoro Timer</h1>
+                <div class="logo-subtitle">Foque • Trabalhe • Descanse</div>
             </div>
             <div class="header-controls">
-                <button class="btn-icon" id="musicToggle" title="Controle de Música">
-                    <span class="icon">🎵</span>
+                <button class="btn-icon fullscreen-btn" title="Tela Cheia" aria-label="Ativar tela cheia">
+                    <i class="icon fas fa-expand"></i>
+                    <span class="icon-label">Tela</span>
+                </button>
+                <button class="btn-icon music-toggle-btn" title="Música" aria-label="Abrir painel de música">
+                    <i class="icon fas fa-music"></i>
                     <span class="icon-label">Música</span>
                 </button>
-                <button class="btn-icon" id="fullscreenBtn" title="Tela Cheia">
-                    <span class="icon">⛶</span>
-                    <span class="icon-label">Tela Cheia</span>
+                <button class="btn-icon settings-toggle-btn" title="Configurações" aria-label="Abrir configurações">
+                    <i class="icon fas fa-cog"></i>
+                    <span class="icon-label">Config</span>
                 </button>
             </div>
         </header>
 
-        <!-- Exit Fullscreen Button (Only visible in fullscreen) -->
-        <button class="exit-fullscreen-btn hidden" id="exitFullscreenBtn">
-            <span class="exit-icon">✕</span>
-            <span class="exit-label">Sair da Tela Cheia</span>
+        <!-- Exit Fullscreen Button -->
+        <button class="exit-fullscreen-btn hidden" title="Sair da Tela Cheia" aria-label="Sair do modo tela cheia">
+            <i class="exit-icon fas fa-times"></i>
+            <span class="exit-label">Sair</span>
         </button>
 
-        <!-- Main Timer Section -->
+        <!-- Main Content -->
         <main class="main-content">
             <div class="timer-container">
-                <!-- Relógio Líquido Principal -->
-                <div class="liquid-timer" id="timerDisplay">
-                    <!-- Efeitos Líquidos de Fundo -->
-                    <div class="liquid-background">
-                        <div class="liquid-wave wave1"></div>
-                        <div class="liquid-wave wave2"></div>
-                        <div class="liquid-wave wave3"></div>
-                        <div class="liquid-wave wave4"></div>
-                    </div>
-                    
-                    <!-- Círculo Principal -->
+                <!-- Timer Circle -->
+                <div class="liquid-timer">
                     <div class="timer-circle">
-                        <svg class="progress-ring" viewBox="0 0 400 400">
-                            <defs>
-                                <linearGradient id="liquidGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#9333ea;stop-opacity:0.9" />
-                                    <stop offset="25%" style="stop-color:#3b82f6;stop-opacity:0.8" />
-                                    <stop offset="50%" style="stop-color:#06b6d4;stop-opacity:0.7" />
-                                    <stop offset="75%" style="stop-color:#ec4899;stop-opacity:0.8" />
-                                    <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0.9" />
-                                </linearGradient>
-                                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                                    <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-                                    <feMerge> 
-                                        <feMergeNode in="coloredBlur"/>
-                                        <feMergeNode in="SourceGraphic"/>
-                                    </feMerge>
-                                </filter>
-                            </defs>
-                            
-                            <!-- Círculo de Fundo -->
-                            <circle cx="200" cy="200" r="180" 
-                                    fill="none" 
-                                    stroke="rgba(147, 51, 234, 0.1)" 
-                                    stroke-width="12"
-                                    stroke-linecap="round"/>
-                            
-                            <!-- Barra de Progresso Líquida -->
-                            <circle cx="200" cy="200" r="180" 
-                                    fill="none" 
-                                    stroke="url(#liquidGradient)" 
-                                    stroke-width="12" 
-                                    stroke-linecap="round"
-                                    stroke-dasharray="1130.97"
-                                    stroke-dashoffset="1130.97"
-                                    transform="rotate(-90 200 200)"
-                                    filter="url(#glow)"
-                                    class="progress-bar"
-                                    id="progressBar"/>
+                        <svg class="progress-ring" width="320" height="320" aria-hidden="true">
+                            <circle class="progress-bar" 
+                                    cx="160" 
+                                    cy="160" 
+                                    r="150" 
+                                    stroke-dasharray="942.48" 
+                                    stroke-dashoffset="942.48">
+                            </circle>
                         </svg>
-                        
-                        <!-- Display Central do Tempo -->
                         <div class="time-display">
-                            <div class="time-wrapper">
-                                <span class="time-text" id="timeText">25:00:00</span>
-                            </div>
-                            <div class="status-wrapper">
-                                <span class="status-text" id="timerStatus">Trabalho</span>
-                                <div class="status-indicator">
-                                    <div class="indicator-dot"></div>
-                                    <div class="indicator-pulse"></div>
-                                </div>
-                            </div>
+                            <div class="time-text" aria-live="polite">25:00</div>
+                            <div class="status-text" aria-live="polite">Foco</div>
+                            <div class="status-indicator" aria-hidden="true"></div>
                         </div>
-                    </div>
-                    
-                    <!-- Partículas Flutuantes -->
-                    <div class="floating-particles">
-                        <div class="float-particle"></div>
-                        <div class="float-particle"></div>
-                        <div class="float-particle"></div>
-                        <div class="float-particle"></div>
-                        <div class="float-particle"></div>
-                        <div class="float-particle"></div>
                     </div>
                 </div>
 
-                <!-- Informações da Sessão -->
+                <!-- Session Info -->
                 <div class="session-info">
                     <div class="session-counter">
-                        <span class="session-label">Sessão</span>
-                        <span class="session-number" id="sessionNumber">1</span>
+                        <div class="session-label">Sessão</div>
+                        <div class="session-number" aria-live="polite">1</div>
                     </div>
                     <div class="next-session">
-                        <span class="next-label">Próximo:</span>
-                        <span class="next-text" id="nextSession">Pausa</span>
+                        <div class="next-label">Próximo</div>
+                        <div class="next-text" aria-live="polite">Pausa</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Controles do Timer -->
+            <!-- Timer Controls -->
             <div class="timer-controls">
-                <button class="btn-control play-btn" id="playBtn" title="Iniciar">
-                    <div class="btn-background"></div>
-                    <span class="btn-icon">▶</span>
-                    <span class="btn-label">Iniciar</span>
+                <button class="btn-control play-btn" title="Iniciar Timer" aria-label="Iniciar sessão Pomodoro">
+                    <i class="btn-icon fas fa-play"></i>
+                    <span class="btn-label">Play</span>
                 </button>
-                <button class="btn-control pause-btn" id="pauseBtn" title="Pausar">
-                    <div class="btn-background"></div>
-                    <span class="btn-icon">⏸</span>
-                    <span class="btn-label">Pausar</span>
+                <button class="btn-control pause-btn" title="Pausar Timer" aria-label="Pausar sessão atual">
+                    <i class="btn-icon fas fa-pause"></i>
+                    <span class="btn-label">Pause</span>
                 </button>
-                <button class="btn-control reset-btn" id="resetBtn" title="Resetar">
-                    <div class="btn-background"></div>
-                    <span class="btn-icon">⏹</span>
-                    <span class="btn-label">Resetar</span>
-                </button>
-                <button class="btn-control settings-btn" id="settingsBtn" title="Configurações">
-                    <div class="btn-background"></div>
-                    <span class="btn-icon">⚙</span>
-                    <span class="btn-label">Configurar</span>
+                <button class="btn-control reset-btn" title="Resetar Timer" aria-label="Resetar para início">
+                    <i class="btn-icon fas fa-redo"></i>
+                    <span class="btn-label">Reset</span>
                 </button>
             </div>
         </main>
 
         <!-- Music Panel -->
-        <section class="music-panel glassmorphism hidden" id="musicPanel">
+        <aside class="music-panel hidden" role="dialog" aria-labelledby="music-panel-title">
             <div class="panel-header">
-                <h3>🎵 Controle de Áudio</h3>
-                <button class="panel-close" id="musicPanelClose">×</button>
+                <h3 id="music-panel-title">Música Ambiente</h3>
+                <button class="panel-close music-close" aria-label="Fechar painel de música">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            
-            <!-- YouTube Link Input -->
+
+            <!-- Music Player Section -->
+            <div class="music-player-section">
+                <div class="current-track-info">
+                    <div class="track-artwork">
+                        <div class="artwork-placeholder">
+                            <i class="fas fa-music"></i>
+                        </div>
+                        <div class="play-indicator">
+                            <div class="pulse-ring"></div>
+                            <div class="pulse-ring pulse-ring-delay"></div>
+                        </div>
+                    </div>
+                    <div class="track-details">
+                        <div class="track-title">Selecione uma playlist</div>
+                        <div class="track-artist">Escolha sua música ambiente</div>
+                        <div class="track-progress">
+                            <span class="track-counter">0 / 0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Player Controls com Volume Integrado -->
+                <div class="player-controls">
+                    <button class="player-btn prev-btn" title="Faixa Anterior" aria-label="Tocar faixa anterior">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="player-btn play-music-btn primary" title="Play/Pause Música" aria-label="Reproduzir ou pausar música">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="player-btn next-btn" title="Próxima Faixa" aria-label="Tocar próxima faixa">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button class="player-btn stop-btn" title="Parar Música" aria-label="Parar reprodução">
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    
+                    <!-- Volume Control Estilo YouTube -->
+                    <div class="volume-control-youtube">
+                        <button class="player-btn volume-toggle-btn" title="Volume" aria-label="Controle de volume" data-volume="high">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                        <div class="volume-slider-container hidden">
+                            <input type="range" 
+                                   class="volume-slider-youtube" 
+                                   min="0" 
+                                   max="100" 
+                                   value="50"
+                                   orient="vertical"
+                                   aria-label="Nível de volume">
+                            <span class="volume-percentage">50%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YouTube Section -->
             <div class="youtube-section">
-                <h4>🎬 Link do YouTube</h4>
+                <h4>YouTube Personalizado</h4>
                 <div class="youtube-input-group">
                     <input type="url" 
-                           id="youtubeLink" 
+                           class="youtube-input" 
                            placeholder="Cole o link do YouTube aqui..."
-                           class="youtube-input"/>
-                    <button class="youtube-add-btn" id="addYoutubeBtn">
-                        <span class="btn-icon">+</span>
+                           aria-label="Link do YouTube">
+                    <button class="youtube-add-btn" title="Adicionar Link" aria-label="Adicionar vídeo do YouTube">
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
-                <div class="youtube-status" id="youtubeStatus">
-                    <span class="status-icon">🎵</span>
-                    <span class="status-text">Nenhum vídeo carregado</span>
+                <div class="youtube-status hidden" role="status" aria-live="polite">
+                    <i class="fas fa-music"></i>
+                    <span>Carregando música...</span>
                 </div>
             </div>
-            
-            <div class="section-divider"></div>
-            
-            <!-- Opções de Música -->
-            <div class="music-options">
-                <button class="music-btn active" data-type="none">
-                    <div class="music-icon-wrapper">
-                        <span class="music-icon">🔇</span>
-                    </div>
-                    <div class="music-info">
-                        <span class="music-label">Sem Áudio</span>
-                        <span class="music-description">Modo silencioso</span>
-                    </div>
-                </button>
+
+            <!-- Music Categories -->
+            <div class="music-categories">
+                <h4>Categorias de Música</h4>
                 
-                <button class="music-btn" data-type="youtube">
-                    <div class="music-icon-wrapper">
-                        <span class="music-icon">🎬</span>
+                <button class="category-btn" data-category="synthwave" aria-label="Selecionar playlist Synthwave">
+                    <div class="category-icon synthwave-icon">
+                        <i class="fas fa-wave-square"></i>
                     </div>
-                    <div class="music-info">
-                        <span class="music-label">YouTube</span>
-                        <span class="music-description">Seu link personalizado</span>
+                    <div class="category-info">
+                        <div class="category-name">🌊 Synthwave</div>
+                        <div class="category-description">Música eletrônica retrô</div>
                     </div>
+                    <div class="category-count">3 faixas</div>
                 </button>
-                
-                <button class="music-btn" data-type="lofi">
-                    <div class="music-icon-wrapper">
-                        <span class="music-icon">🎧</span>
+
+                <button class="category-btn" data-category="nature" aria-label="Selecionar playlist Sons da Natureza">
+                    <div class="category-icon nature-icon">
+                        <i class="fas fa-leaf"></i>
                     </div>
-                    <div class="music-info">
-                        <span class="music-label">Lofi Beats</span>
-                        <span class="music-description">Relaxante e focado</span>
+                    <div class="category-info">
+                        <div class="category-name">🌿 Sons da Natureza</div>
+                        <div class="category-description">Chuva, oceano e floresta</div>
                     </div>
+                    <div class="category-count">2 faixas</div>
                 </button>
-                
-                <button class="music-btn" data-type="nature">
-                    <div class="music-icon-wrapper">
-                        <span class="music-icon">🌿</span>
+
+                <button class="category-btn" data-category="lofi" aria-label="Selecionar playlist Lo-fi Hip Hop">
+                    <div class="category-icon lofi-icon">
+                        <i class="fas fa-headphones"></i>
                     </div>
-                    <div class="music-info">
-                        <span class="music-label">Natureza</span>
-                        <span class="music-description">Sons ambientes</span>
+                    <div class="category-info">
+                        <div class="category-name">🎧 Lo-fi Hip Hop</div>
+                        <div class="category-description">Música relaxante para estudar</div>
                     </div>
+                    <div class="category-count">2 faixas</div>
                 </button>
-                
-                <button class="music-btn" data-type="synthwave">
-                    <div class="music-icon-wrapper">
-                        <span class="music-icon">🌊</span>
+
+                <button class="category-btn" data-category="youtube" aria-label="Selecionar música personalizada do YouTube">
+                    <div class="category-icon youtube-icon">
+                        <i class="fab fa-youtube"></i>
                     </div>
-                    <div class="music-info">
-                        <span class="music-label">Synthwave</span>
-                        <span class="music-description">Energia retrô</span>
+                    <div class="category-info">
+                        <div class="category-name">📺 YouTube</div>
+                        <div class="category-description">Sua música personalizada</div>
                     </div>
-                </button>
-                
-                <button class="music-btn" data-type="upload">
-                    <div class="music-icon-wrapper">
-                        <span class="music-icon">📁</span>
-                    </div>
-                    <div class="music-info">
-                        <span class="music-label">Upload MP3</span>
-                        <span class="music-description">Arquivo local</span>
-                    </div>
+                    <div class="category-count">Custom</div>
                 </button>
             </div>
-            
-            <!-- Controles de Música -->
-            <div class="music-controls-section">
-                <div class="music-player">
-                    <button class="music-control-btn" id="musicPrevBtn">⏮</button>
-                    <button class="music-control-btn primary" id="musicPlayBtn">▶</button>
-                    <button class="music-control-btn" id="musicPauseBtn">⏸</button>
-                    <button class="music-control-btn" id="musicNextBtn">⏭</button>
-                </div>
-                
-                <div class="current-music" id="currentMusic">
-                    <div class="music-title">Nenhuma música</div>
-                    <div class="music-artist">Silencioso</div>
-                </div>
-            </div>
-            
-            <!-- Controle de Volume -->
-            <div class="volume-section">
-                <div class="volume-header">
-                    <span class="volume-label">Volume</span>
-                    <span class="volume-value" id="volumeValue">30%</span>
-                </div>
-                <div class="volume-control">
-                    <button class="volume-btn" id="volumeMuteBtn">🔊</button>
-                    <input type="range" id="volumeSlider" min="0" max="100" value="30" class="volume-slider">
-                </div>
-            </div>
-            
-            <input type="file" id="audioUpload" accept="audio/*" style="display: none;">
-        </section>
+        </aside>
 
         <!-- Settings Panel -->
-        <section class="settings-panel glassmorphism hidden" id="settingsPanel">
+        <aside class="settings-panel hidden" role="dialog" aria-labelledby="settings-panel-title">
             <div class="panel-header">
-                <h3>⚙️ Configurações</h3>
-                <button class="panel-close" id="settingsPanelClose">×</button>
+                <h3 id="settings-panel-title">Configurações</h3>
+                <button class="panel-close settings-close" aria-label="Fechar painel de configurações">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            
+
             <div class="settings-grid">
+                <!-- Timer Settings -->
                 <div class="setting-group">
-                    <label for="activityType">Tipo de Atividade</label>
-                    <select id="activityType" class="activity-select">
-                        <option value="Trabalho">Trabalho</option>
-                        <option value="Estudo">Estudo</option>
-                        <option value="Exercício">Exercício</option>
-                        <option value="Leitura">Leitura</option>
-                        <option value="Projeto">Projeto</option>
-                        <option value="Foco">Foco</option>
-                        <option value="Tarefa">Tarefa</option>
+                    <label for="work-time">Tempo de Trabalho</label>
+                    <div class="input-wrapper">
+                        <input type="number" 
+                               id="work-time" 
+                               min="1" 
+                               max="60" 
+                               value="25"
+                               aria-describedby="work-time-unit">
+                        <span class="input-unit" id="work-time-unit">min</span>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label for="short-break">Pausa Curta</label>
+                    <div class="input-wrapper">
+                        <input type="number" 
+                               id="short-break" 
+                               min="1" 
+                               max="30" 
+                               value="5"
+                               aria-describedby="short-break-unit">
+                        <span class="input-unit" id="short-break-unit">min</span>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label for="long-break">Pausa Longa</label>
+                    <div class="input-wrapper">
+                        <input type="number" 
+                               id="long-break" 
+                               min="1" 
+                               max="60" 
+                               value="15"
+                               aria-describedby="long-break-unit">
+                        <span class="input-unit" id="long-break-unit">min</span>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <label for="sessions-until-long">Sessões até Pausa Longa</label>
+                    <div class="input-wrapper">
+                        <input type="number" 
+                               id="sessions-until-long" 
+                               min="2" 
+                               max="10" 
+                               value="4"
+                               aria-describedby="sessions-unit">
+                        <span class="input-unit" id="sessions-unit">sessões</span>
+                    </div>
+                </div>
+
+                <!-- Checkbox Settings -->
+                <div class="setting-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="auto-start">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Iniciar automaticamente</span>
+                    </label>
+                </div>
+
+                <div class="setting-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="notifications" checked>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Notificações</span>
+                    </label>
+                </div>
+
+                <!-- Activity Selection -->
+                <div class="setting-group">
+                    <label for="activity">Atividade Atual</label>
+                    <select id="activity" class="activity-select">
+                        <option value="study">Estudar</option>
+                        <option value="work">Trabalhar</option>
+                        <option value="code">Programar</option>
+                        <option value="read">Ler</option>
+                        <option value="write">Escrever</option>
+                        <option value="design">Design</option>
                     </select>
                 </div>
-                
-                <div class="setting-group">
-                    <label for="workTime">Tempo de Trabalho</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="workTime" min="1" max="60" value="25">
-                        <span class="input-unit">min</span>
-                    </div>
-                </div>
-                
-                <div class="setting-group">
-                    <label for="breakTime">Tempo de Pausa</label>
-                    <div class="input-wrapper">
-                        <input type="number" id="breakTime" min="1" max="30" value="5">
-                        <span class="input-unit">min</span>
-                    </div>
-                </div>
+            </div>
 
-                <div class="setting-group checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="infiniteMode">
-                        <span class="checkmark"></span>
-                        <span class="checkbox-text">Modo Infinito (Cronômetro Crescente)</span>
-                    </label>
-                </div>
-                
-                <div class="setting-group checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="pauseMusicWithTimer" checked>
-                        <span class="checkmark"></span>
-                        <span class="checkbox-text">Pausar música com timer</span>
-                    </label>
-                </div>
-                
-                <div class="background-selector">
-                    <h4>Tema de Fundo</h4>
-                    <div class="bg-options">
-                        <button class="bg-btn active" data-bg="default">
-                            <div class="bg-preview bg-default"></div>
-                            <span class="bg-name">Padrão</span>
-                        </button>
-                        <button class="bg-btn" data-bg="neon-city">
-                            <div class="bg-preview bg-neon-city"></div>
-                            <span class="bg-name">Neon City</span>
-                        </button>
-                        <button class="bg-btn" data-bg="cyber-grid">
-                            <div class="bg-preview bg-cyber-grid"></div>
-                            <span class="bg-name">Cyber Grid</span>
-                        </button>
-                        <button class="bg-btn" data-bg="space-retro">
-                            <div class="bg-preview bg-space-retro"></div>
-                            <span class="bg-name">Space Retro</span>
-                        </button>
-                    </div>
+            <!-- Background Theme Selector - ATUALIZADO COM NOVOS TEMAS -->
+            <div class="background-selector">
+                <h4>Tema de Fundo</h4>
+                <div class="bg-options">
+                    <button class="bg-btn active" data-theme="default" aria-label="Selecionar tema padrão">
+                        <div class="bg-preview"></div>
+                        <span class="bg-name">Padrão</span>
+                    </button>
+                    
+                    <button class="bg-btn" data-theme="neon-city" aria-label="Selecionar tema Neon City">
+                        <div class="bg-preview"></div>
+                        <span class="bg-name">Neon City</span>
+                    </button>
+                    
+                    <button class="bg-btn" data-theme="cyber-grid" aria-label="Selecionar tema Cyber Grid">
+                        <div class="bg-preview"></div>
+                        <span class="bg-name">Cyber Grid</span>
+                    </button>
+                    
+                    <button class="bg-btn" data-theme="space-retro" aria-label="Selecionar tema Space Retro">
+                        <div class="bg-preview"></div>
+                        <span class="bg-name">Space Retro</span>
+                    </button>
+                    
+                    <!-- NOVOS TEMAS ADICIONADOS -->
+                    <button class="bg-btn" data-theme="peace" aria-label="Selecionar tema Peace">
+                        <div class="bg-preview"></div>
+                        <span class="bg-name">Peace</span>
+                    </button>
+                    
+                    <button class="bg-btn" data-theme="nature" aria-label="Selecionar tema Nature">
+                        <div class="bg-preview"></div>
+                        <span class="bg-name">Nature</span>
+                    </button>
                 </div>
             </div>
-        </section>
+        </aside>
 
-        <!-- Music Status Display -->
-        <div class="music-status glassmorphism" id="musicStatus">
-            <div class="music-visual">
-                <div class="audio-bars">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
+        <!-- Music Status Bar -->
+        <div class="music-status hidden" role="status" aria-live="polite">
+            <div class="audio-bars" aria-hidden="true">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
             </div>
             <div class="music-info">
-                <div class="music-title" id="currentMusicTitle">Sem música</div>
-                <div class="music-source" id="musicSource">Modo silencioso</div>
+                <div class="music-title">Nenhuma música</div>
+                <div class="music-source">Selecione uma categoria</div>
             </div>
         </div>
 
         <!-- Notification -->
-        <div class="notification glassmorphism hidden" id="notification">
+        <div class="notification" role="alert" aria-live="assertive">
             <div class="notification-icon">
-                <span class="notif-emoji">🎉</span>
+                <span class="notif-emoji">🍅</span>
             </div>
             <div class="notification-content">
                 <div class="notification-title">Sessão Concluída!</div>
-                <div class="notification-message">Hora da pausa</div>
+                <div class="notification-message">Hora da pausa de 5 minutos</div>
             </div>
-            <button class="notification-close" id="notificationClose">×</button>
+            <button class="notification-close" aria-label="Fechar notificação">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-
-        <!-- Audio Elements -->
-        <div id="youtubePlayer" style="display: none;"></div>
-        <audio id="audioPlayer" loop preload="metadata"></audio>
     </div>
 
+    <!-- YouTube Player (Invisible) -->
+    <div id="youtube-player" style="display: none;" aria-hidden="true"></div>
+
+    <!-- Scripts -->
     <script src="https://www.youtube.com/iframe_api"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="/js/app.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(registrationError => console.log('SW registration failed'));
+            });
+        }
+    </script>
 </body>
 </html>
